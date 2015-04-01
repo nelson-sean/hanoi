@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 	int max_disc_num = get_max_disc_num();
 	int pegs[3][max_disc_num];
 
-	int disc_num = 3;
+	int disc_num = 5;
 
 	if(argc > 1)
 	{
