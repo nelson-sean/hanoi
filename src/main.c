@@ -6,9 +6,9 @@ void init_ncurses();
 void draw_window(int max_disc_num, int pegs[3][max_disc_num], int selected);
 int get_max_base_size();
 int get_max_disc_num();
-void move_disc(int from, int to, int max_disc_num, int pegs[3][max_disc_num]);
+bool move_disc(int from, int to, int max_disc_num, int pegs[3][max_disc_num]);
 
-//TODO: Add move counter and indicator for current size
+//TODO: Add better win message
 int main(int argc, char* argv[])
 {
 
@@ -74,6 +74,15 @@ int main(int argc, char* argv[])
 
 	draw_window(max_disc_num, pegs, selected);
 
+	int moves = 0;
+
+	// draw indicators
+	attron(COLOR_PAIR(1));
+	mvprintw(0, 0, "moves: %d", moves);
+	mvprintw(0, COLS-8, "size: %d", disc_num);
+	attroff(COLOR_PAIR(1));
+
+
 	while(true)
 	{
 		if(selected == -1)
@@ -91,25 +100,37 @@ int main(int argc, char* argv[])
 					break;
 			}
 		}else/* a peg is selected */{
+			bool moved = false;
 			switch(getch())
 			{
 				case 'j':
-					move_disc(selected, 0, max_disc_num, pegs);
+					moved = move_disc(selected, 0, max_disc_num, pegs);
 					selected = -1;
 					break;
 				case 'k':
-					move_disc(selected, 1, max_disc_num, pegs);
+					moved = move_disc(selected, 1, max_disc_num, pegs);
 					selected = -1;
 					break;
 				case 'l':
-					move_disc(selected, 2, max_disc_num, pegs);
+					moved = move_disc(selected, 2, max_disc_num, pegs);
 					selected = -1;
 					break;
+			}
+			if(moved)
+			{
+				moves++;
 			}
 		}// end else
 
 		draw_window(max_disc_num, pegs, selected);
 
+		// draw indicators
+		attron(COLOR_PAIR(1));
+		mvprintw(0, 0, "moves: %d", moves);
+		mvprintw(0, COLS-8, "size: %d", disc_num);
+		attroff(COLOR_PAIR(1));
+		refresh();
+		
 		bool won = true;
 		int a;
 		for(a = 0; a < max_disc_num; a++)
@@ -143,7 +164,7 @@ void init_ncurses()
 
 	start_color();
 	use_default_colors();
-	init_pair(1, COLOR_WHITE, COLOR_WHITE);
+	init_pair(1, COLOR_BLACK, COLOR_WHITE);
 	init_pair(2, COLOR_BLACK, COLOR_GREEN);
 	
 }
@@ -152,6 +173,12 @@ void draw_window(int max_disc_num, int pegs[3][max_disc_num], int selected)
 {
 
 	clear();
+
+	// draw top bar
+	attron(COLOR_PAIR(1));
+	mvprintw(0, 0, "%*s", COLS, " ");
+	attroff(COLOR_PAIR(1));
+	
 
 	// draw pegs
 	attron(COLOR_PAIR(1));
@@ -222,8 +249,10 @@ int get_max_disc_num()
 	return (get_max_base_size()-1)/2;
 }
 
-void move_disc(int from, int to, int max_disc_num, int pegs[3][max_disc_num])
+bool move_disc(int from, int to, int max_disc_num, int pegs[3][max_disc_num])
 {
+	bool moved = false;
+
 	//find top disc index on 'from'
 	int from_i; 
 	for(from_i = max_disc_num-1; from_i >= 0; from_i-- )
@@ -236,7 +265,7 @@ void move_disc(int from, int to, int max_disc_num, int pegs[3][max_disc_num])
 
 	if(from_i == -1)// there is nothing to move
 	{
-		return;
+		return false;
 	}
 
 	//find top disc index on 'to'
@@ -253,11 +282,15 @@ void move_disc(int from, int to, int max_disc_num, int pegs[3][max_disc_num])
 	{
 		pegs[to][to_i+1] = pegs[from][from_i];
 		pegs[from][from_i] = 0;
+		moved = true;
 	}else{
 		if(pegs[to][to_i] > pegs[from][from_i])
 		{
 			pegs[to][to_i+1] = pegs[from][from_i];
 			pegs[from][from_i] = 0;
+			moved = true;
 		}
 	}
+
+	return moved;
 }
