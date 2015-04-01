@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <ncurses.h>
+#include <string.h>
 
 void init_ncurses();
 void draw_window(int max_disc_num, int pegs[3][max_disc_num], int selected);
@@ -7,7 +8,8 @@ int get_max_base_size();
 int get_max_disc_num();
 void move_disc(int from, int to, int max_disc_num, int pegs[3][max_disc_num]);
 
-int main()
+//TODO: Add move counter and indicator for current size
+int main(int argc, char* argv[])
 {
 
 	init_ncurses();
@@ -16,7 +18,44 @@ int main()
 	int max_disc_num = get_max_disc_num();
 	int pegs[3][max_disc_num];
 
-	int disc_num = 5;
+	int disc_num = 3;
+
+	if(argc > 1)
+	{
+		int i = 1;
+		while(i < argc)
+		{
+			if(argv[i][0] == '-')
+			{
+				switch(argv[i][1])
+				{
+					case 'n':
+						disc_num = atoi(argv[i+1]);
+						if(disc_num > max_disc_num)
+						{
+							disc_num = max_disc_num;
+						}else if(disc_num < 3){
+							disc_num = 3;
+						}
+						break;
+					case 'c':
+						if(strcmp("black", argv[i+1]) == 0){init_pair(2, COLOR_WHITE, COLOR_BLACK);}
+						else if(strcmp("red", argv[i+1]) == 0){init_pair(2, COLOR_BLACK, COLOR_RED);}
+						else if(strcmp("green", argv[i+1]) == 0){init_pair(2, COLOR_BLACK, COLOR_GREEN);}
+						else if(strcmp("yellow", argv[i+1]) == 0){init_pair(2, COLOR_BLACK, COLOR_YELLOW);}
+						else if(strcmp("blue", argv[i+1]) == 0){init_pair(2, COLOR_BLACK, COLOR_BLUE);}
+						else if(strcmp("magenta", argv[i+1]) == 0){init_pair(2, COLOR_BLACK, COLOR_MAGENTA);}
+						else if(strcmp("cyan", argv[i+1]) == 0){init_pair(2, COLOR_BLACK, COLOR_CYAN);}
+						else if(strcmp("white", argv[i+1]) == 0){init_pair(2, COLOR_BLACK, COLOR_WHITE);}
+						break;
+					case 'm':
+						disc_num = max_disc_num;
+						break;
+				}
+			}
+			i+=2;
+		}
+	}
 
 	int i;
 	for(i = 0; i < max_disc_num; i++)
