@@ -98,6 +98,21 @@ int main(int argc, char* argv[])
 				case 'l':
 					selected = 2;
 					break;
+				case '\033':
+					getch();
+					switch(getch())
+					{
+						case 'B':
+							selected = 1;
+							break;
+						case 'C':
+							selected = 2;
+							break;
+						case 'D':
+							selected = 0;
+							break;
+					}
+					break;
 			}
 		}else/* a peg is selected */{
 			bool moved = false;
@@ -114,6 +129,24 @@ int main(int argc, char* argv[])
 				case 'l':
 					moved = move_disc(selected, 2, max_disc_num, pegs);
 					selected = -1;
+					break;
+				case '\033':
+					getch();
+					switch(getch())
+					{
+						case 'B':
+							moved = move_disc(selected, 1, max_disc_num, pegs);
+							selected = -1;
+							break;
+						case 'C':
+							moved = move_disc(selected, 2, max_disc_num, pegs);
+							selected = -1;
+							break;
+						case 'D':
+							moved = move_disc(selected, 0, max_disc_num, pegs);
+							selected = -1;
+							break;
+					}
 					break;
 			}
 			if(moved)
