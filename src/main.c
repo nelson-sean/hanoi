@@ -12,6 +12,15 @@ bool move_disc(int from, int to, int max_disc_num, int pegs[3][max_disc_num]);
 int main(int argc, char* argv[])
 {
 
+	const char *win_message[5] =
+	{
+		"__  __                        _       __",
+		"\\ \\/ /___  __  __   _      __(_)___  / /",
+		" \\  / __ \\/ / / /  | | /| / / / __ \\/ / ",
+		" / / /_/ / /_/ /   | |/ |/ / / / / /_/  ",
+		"/_/\\____/\\__,_/    |__/|__/_/_/ /_(_)   "
+	};
+
 	init_ncurses();
 
 	// initialize pegs
@@ -176,7 +185,24 @@ int main(int argc, char* argv[])
 
 		if(won)
 		{
-			mvprintw(LINES/2, COLS/2-5, "You won!");
+			clear();
+
+			// draw top bar
+			attron(COLOR_PAIR(1));
+			mvprintw(0, 0, "%*s", COLS, " ");
+			attroff(COLOR_PAIR(1));
+
+			// draw indicators
+			attron(COLOR_PAIR(1));
+			mvprintw(0, 0, "moves: %d", moves);
+			mvprintw(0, COLS-8, "size: %d", disc_num);
+			attroff(COLOR_PAIR(1));
+
+			int r;
+			for(r = 0; r < 5; r++)
+			{
+				mvprintw(r + LINES/2 - 2, COLS/2 - 20, win_message[r]);
+			}
 			break;
 		}
 	}// end while(true)
