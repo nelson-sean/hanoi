@@ -8,7 +8,6 @@ int get_max_base_size();
 int get_max_disc_num();
 bool move_disc(int from, int to, int max_disc_num, int pegs[3][max_disc_num]);
 
-//TODO: Add better win message
 int main(int argc, char* argv[])
 {
 
@@ -224,7 +223,7 @@ void init_ncurses()
 	start_color();
 	use_default_colors();
 	init_pair(1, COLOR_BLACK, COLOR_WHITE);
-	init_pair(2, COLOR_BLACK, COLOR_GREEN);
+	init_pair(2, COLOR_BLACK, COLOR_WHITE);
 	
 }
 
