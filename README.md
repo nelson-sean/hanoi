@@ -15,7 +15,9 @@ hanoi [-c color] [-n # of disks | -m]
 
 ### Runtime Options
 -c <color>: choose a color for the disks
+
 -n   <num>: choose the number of disks (default 5)
+
 -m        : play with the maximum number of disks that can fit (note: This may result in a game that is unsolvable before the heat death of the universe)
 
 ### Controls
@@ -23,3 +25,6 @@ Use j,k,l or left,down,right to select a disk to move. A white marker will appea
 
 #### Note
 If you experience flickering, use a buffered terminal or terminal multiplexer such as GNU screen or tmux.
+
+## Screenshot
+![hanoi](https://cloud.githubusercontent.com/assets/6550505/26069840/60c6f8e8-3970-11e7-83e2-b04a642bb270.png)
